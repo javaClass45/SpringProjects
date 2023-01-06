@@ -3,13 +3,13 @@ package com.rest.api.service;
 import java.util.List;
 import java.util.Optional;
 
-import com.rest.api.entity.Comment;
-import com.rest.api.entity.dto.CommentDTO;
+import com.rest.api.utils.request.CommentDTO;
+import com.rest.api.utils.response.CommentResponseDTO;
 
 public interface CommentService  {
-    List<CommentDTO> getAll();
+    List<CommentResponseDTO> getAll();
 
-    Optional<CommentDTO> findById(Long id);
+    Optional<CommentResponseDTO> findById(Long id);
 
-    CommentDTO save(CommentDTO dto);
+    CommentResponseDTO save(CommentDTO dto);
 }
