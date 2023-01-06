@@ -7,9 +7,9 @@ import com.rest.api.entity.Comment;
 import com.rest.api.entity.dto.CommentDTO;
 
 public interface CommentService  {
-    List<Comment> getAll();
+    List<CommentDTO> getAll();
 
-    Optional<Comment> findById(Long id);
+    Optional<CommentDTO> findById(Long id);
 
-    Comment save(CommentDTO dto);
+    CommentDTO save(CommentDTO dto);
 }

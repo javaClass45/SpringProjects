@@ -17,7 +17,8 @@ public class CommentDTO {
     private String body;
 
 
-    private Post post;
+  //  private Post post;
+    private Post post; //todo POST ????
 
     public String getName() {
         return name;
@@ -42,12 +43,13 @@ public class CommentDTO {
     public void setBody(String body) {
         this.body = body;
     }
+//todo
 
-    public Post getPost() {
-        return post;
-    }
-
-    public void setPost(Post post) {
-        this.post = post;
-    }
+//    public Post getPost() {
+//        return post;
+//    }
+//
+//    public void setPost(Post post) {
+//        this.post = post;
+//    }
 }

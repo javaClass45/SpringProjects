@@ -18,26 +18,35 @@ public class CommentServiceImpl implements CommentService {
 
 //    public CommentServiceImpl(CommentRepository commentRepository) {
 //        this.commentRepository = commentRepository;
-//    }//todo 18:24 initialise??? lombok dont work
+//    }
 
 
     @Override
-    public List<Comment> getAll() {
+    public List<CommentDTO> getAll() {
         return commentRepository.findAll();
     }
 
     @Override
-    public Optional<Comment> findById(Long id) {
+    public Optional<CommentDTO> findById(Long id) {
         return commentRepository.findById(id);
     }
 
     @Override
-    public Comment save(CommentDTO dto) {
+    public CommentDTO save(CommentDTO dto) {
         Comment cmt = new Comment();
         cmt.setName(dto.getName());
         cmt.setEmail(dto.getEmail());
         cmt.setBody(dto.getBody());
-        cmt.setPost(dto.getPost());
-        return commentRepository.save(cmt);//todo the end lombok ass MF 20:33
+       // cmt.setPost(dto.getPost());
+        return commentRepository.save(cmt);
     }
+
+    public CommentDTO mapperToDTO(Comment comment) {
+        CommentDTO dto = new CommentDTO();
+        dto.setBody(comment.getBody);
+        dto.setEmail(comment.getEmail);
+
+    }
+
+
 }
