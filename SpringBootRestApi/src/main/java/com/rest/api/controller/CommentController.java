@@ -26,5 +26,25 @@ public class CommentController {
     public ResponseEntity<CommentResponseDTO> createComment(@RequestBody CommentDTO dto) {
         return new ResponseEntity<>(commentService.save(dto), HttpStatus.CREATED);
     }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<Optional<CommentResponseDTO>> findById(@PathVariable("id") Long id) {
+        return new ResponseEntity<>(commentService.findById(id), HttpStatus.OK);
+
+    }
+
+    @PutMapping("/update/{id}")
+    public ResponseEntity<CommentResponseDTO> update(@PathVariable("id") Long id,
+                                                               @RequestBody CommentDTO dto) {
+        return new ResponseEntity<>(commentService.update(dto, id), HttpStatus.OK);
+    }
+
+    @DeleteMapping("/delete/{id}")
+    public ResponseEntity<String> delete(@PathVariable("id") Long id) {
+        return new ResponseEntity<>(commentService.delete(id), HttpStatus.OK);
+
+    }
+
+
 }
 

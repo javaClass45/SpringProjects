@@ -49,8 +49,31 @@ public class CommentServiceImpl implements CommentService {
         return mapperToDTO(savedComment);
     }
 
+    @Override
+    public CommentResponseDTO update(CommentDTO dto, Long id) {
+        Comment comment = commentRepository.getById(id);//todo .get()????
+        comment.setBody(dto.getBody());
+        comment.setEmail(dto.getEmail());
+        comment.setName(dto.getName());
+
+        return mapperToDTO(commentRepository.save(comment));
+
+    }
+
+
+    @Override
+    public String delete(Long id) {
+        commentRepository.deleteById(id);
+
+        return "Success deleted-"+id;
+
+    }
+
+
+
     public CommentResponseDTO mapperToDTO(Comment comment) {
         CommentResponseDTO dto = new CommentResponseDTO();
+        dto.setId(comment.getId());
         dto.setBody(comment.getBody());
         dto.setEmail(comment.getEmail());
         dto.setName(comment.getName());
