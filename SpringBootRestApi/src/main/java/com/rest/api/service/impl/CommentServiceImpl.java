@@ -1,6 +1,9 @@
 package com.rest.api.service.impl;
 
 import com.rest.api.entity.Comment;
+import com.rest.api.entity.Post;
+import com.rest.api.errors.ResourceNotFoundException;
+import com.rest.api.repository.PostRepository;
 import com.rest.api.utils.request.CommentDTO;
 import com.rest.api.repository.CommentRepository;
 import com.rest.api.service.CommentService;
@@ -17,6 +20,8 @@ import java.util.stream.Collectors;
 public class CommentServiceImpl implements CommentService {
 
     private final CommentRepository commentRepository;
+    private final PostRepository postRepository;
+
 
 //    public CommentServiceImpl(CommentRepository commentRepository) {
 //        this.commentRepository = commentRepository;
@@ -31,18 +36,23 @@ public class CommentServiceImpl implements CommentService {
 
     @Override
     public Optional<CommentResponseDTO> findById(Long id) {
-        Comment comment = commentRepository.findById(id).get();
+        Comment comment = commentRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Comment not found: id-" +id));
 
         return Optional.of(mapperToCommentDTO(comment));
     }
 
     @Override
     public CommentResponseDTO save(CommentDTO dto) {
+        Post p = postRepository.findById(dto.getPostId())
+                .orElseThrow(() -> new ResourceNotFoundException("Post not found: id-"
+                        + dto.getPostId()));
+
         Comment cmt = new Comment();
         cmt.setName(dto.getName());
         cmt.setEmail(dto.getEmail());
         cmt.setBody(dto.getBody());
-       // cmt.setPost(dto.getPost());
+        cmt.setPost(p);
 
         Comment savedComment = commentRepository.save(cmt);
 
@@ -51,12 +61,17 @@ public class CommentServiceImpl implements CommentService {
 
     @Override
     public CommentResponseDTO update(CommentDTO dto, Long id) {
-        Comment comment = commentRepository.getById(id);//todo .get()????
+        Comment comment = commentRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Comment not found: id-" +id));
+        Post p = postRepository.findById(dto.getPostId())
+                .orElseThrow(() -> new ResourceNotFoundException("Post not found: id-"
+                        + dto.getPostId()));
         comment.setBody(dto.getBody());
         comment.setEmail(dto.getEmail());
         comment.setName(dto.getName());
-
-        return mapperToCommentDTO(commentRepository.save(comment));
+        comment.setPost(p);
+        Comment savedComment = commentRepository.save(comment);
+        return mapperToCommentDTO(commentRepository.save(savedComment));
 
     }
 
@@ -77,7 +92,7 @@ public class CommentServiceImpl implements CommentService {
         dto.setBody(comment.getBody());
         dto.setEmail(comment.getEmail());
         dto.setName(comment.getName());
-        dto.setPost(comment.getPost());
+        dto.setPost(comment.getPost());//todo 39-46 где-то тут в постах ошибка
         return dto;
     }
 

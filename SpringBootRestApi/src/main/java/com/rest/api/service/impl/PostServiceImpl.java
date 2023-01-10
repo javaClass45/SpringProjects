@@ -1,6 +1,7 @@
 package com.rest.api.service.impl;
 
 import com.rest.api.entity.Post;
+import com.rest.api.errors.ResourceNotFoundException;
 import com.rest.api.repository.PostRepository;
 import com.rest.api.service.PostService;
 import com.rest.api.utils.request.PostDTO;
@@ -10,7 +11,6 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
 import static com.rest.api.service.impl.CommentServiceImpl.mapperToCommentDTO;
@@ -29,6 +29,13 @@ public class PostServiceImpl implements PostService {
 
     @Override
     public Optional<PostResponseDTO> findById(Long id) {
+
+//        Post p = postRepository.findById(id).get();
+//        if (p == null) throw new ResourceNotFoundException("Post is NULL");
+
+        postRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Post not found: id-" + id));
+
         return Optional.of(mapperToPostDTO(postRepository.findById(id).get()));
     }
 
@@ -44,15 +51,19 @@ public class PostServiceImpl implements PostService {
 
     @Override
     public PostResponseDTO update(PostDTO dto, Long id) {
-        Post p = postRepository.findById(id).get();
+        Post p = postRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Post not found: id-" + id));
         p.setDescription(dto.getDescription());
         p.setTitle(dto.getTitle());
         p.setContent(dto.getContent());
+        Post saved = postRepository.save(p);
         return mapperToPostDTO(p);
     }
 
     @Override
     public String delete(Long id) {
+        postRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Post not found: id-" + id));
         postRepository.deleteById(id);
         return "Delete success";
     }
@@ -63,10 +74,13 @@ public class PostServiceImpl implements PostService {
         dto.setTitle(entity.getTitle());
         dto.setDescription(entity.getDescription());
         dto.setContent(entity.getContent());
-        dto.setComments(entity.getComments()
-                .stream()
-                .map(c -> mapperToCommentDTO(c))
-                .collect(Collectors.toSet()));
+        if (entity.getComments().size() > 0) {
+            dto.setComments(entity.getComments()
+                    .stream()
+                    .map(c -> mapperToCommentDTO(c))
+                    .collect(Collectors.toSet()));
+
+        }
         return dto;
     }
 
