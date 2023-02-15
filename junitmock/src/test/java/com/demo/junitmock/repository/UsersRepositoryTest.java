@@ -23,7 +23,7 @@ class UsersRepositoryTest {
     void findByLogin() {
         usersRepository.save(aUser());
         Users foundUser = usersRepository.findByLogin(aUser().getLogin());
-        assertThat(foundUser).isNull();
+        assertThat(foundUser).isNotNull();
         assertThat(foundUser.getName()).isEqualTo(aUser().getName());
 
      }
