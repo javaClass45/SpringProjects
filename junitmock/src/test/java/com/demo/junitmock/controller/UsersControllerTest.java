@@ -1,20 +1,16 @@
 package com.demo.junitmock.controller;
 
-import com.demo.junitmock.exception.ValidationException;
 import com.demo.junitmock.service.UsersService;
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.MockMvcBuilder;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 import java.util.Collections;
 
-import static com.demo.junitmock.prototype.UsersPrototype.aUserDTO;
-import static org.junit.jupiter.api.Assertions.*;
+import static com.demo.junitmock.prototype.UsersPrototypeTest.aUserDTO;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;

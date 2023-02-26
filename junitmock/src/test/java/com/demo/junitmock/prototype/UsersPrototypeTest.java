@@ -3,7 +3,7 @@ package com.demo.junitmock.prototype;
 import com.demo.junitmock.dto.UsersDto;
 import com.demo.junitmock.entity.Users;
 
-public class UsersPrototype {
+public class UsersPrototypeTest {
     public static Users aUser() {
         Users u = new Users();
         u.setName("test_name");

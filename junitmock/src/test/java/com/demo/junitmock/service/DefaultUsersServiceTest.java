@@ -3,12 +3,11 @@ package com.demo.junitmock.service;
 import com.demo.junitmock.dto.UsersDto;
 import com.demo.junitmock.exception.ValidationException;
 import com.demo.junitmock.repository.UsersRepository;
-import org.junit.Before;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import static com.demo.junitmock.prototype.UsersPrototype.aUser;
-import static com.demo.junitmock.prototype.UsersPrototype.aUserDTO;
+import static com.demo.junitmock.prototype.UsersPrototypeTest.aUser;
+import static com.demo.junitmock.prototype.UsersPrototypeTest.aUserDTO;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;

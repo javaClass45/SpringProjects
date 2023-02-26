@@ -28,7 +28,7 @@ class CarTest {
 
     @Test
     void connectTest() {
-        assertThrows(FileNotFoundException.class, () -> {
+        assertThrows(Exception.class, () -> {
             car.connect();
         });
 

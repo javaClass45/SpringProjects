@@ -23,8 +23,12 @@ public class Car {
         return a + 4;
     }
 
-    public String  connect() throws IOException {
-            throw new FileNotFoundException("connection error");
+    public Exception connect() throws Exception {
+        try {
+            throw new ClassNotFoundException("connection error");
+        } catch (ClassNotFoundException e) {
+           return e;
+        }
     }
 
 
