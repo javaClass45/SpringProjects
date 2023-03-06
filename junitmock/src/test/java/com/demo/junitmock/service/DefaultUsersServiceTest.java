@@ -1,10 +1,13 @@
 package com.demo.junitmock.service;
 
 import com.demo.junitmock.dto.UsersDto;
+import com.demo.junitmock.entity.Users;
 import com.demo.junitmock.exception.ValidationException;
 import com.demo.junitmock.repository.UsersRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+
+import java.util.Collections;
 
 import static com.demo.junitmock.prototype.UsersPrototypeTest.aUser;
 import static com.demo.junitmock.prototype.UsersPrototypeTest.aUserDTO;
@@ -62,5 +65,7 @@ class DefaultUsersServiceTest {
 
     @Test
     void findAll() {
+        when(usersRepository.findAll()).thenReturn(Collections.singletonList(aUser()));
+
     }
 }
