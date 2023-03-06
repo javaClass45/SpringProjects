@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <title>Index</title>
+</head>
+<body>
+<table border="1">
+    <tr>
+        <td><b>Исполнитель:</b>
+        </td>
+        <td><b>Email:</b>
+        </td>
+        <td><b>Роль:</b>
+        </td>
+    </tr>
+    <div th:each="person : ${people}">
+    <tr>
+            <td><a th:href="@{/person/{id}(id=${person.getId()})}" th:text="${person.getUsername()}">user</a></td>
+            <td><a th:href="@{/person/{id}(id=${person.getId()})}" th:text="${ person.getEmail() }">Email</a></td>
+            <td><a th:href="@{/person/{id}(id=${person.getId()})}" th:text="${ person.getRole()}">Role</a></td>
+    </tr>
+    </div>
+</table>
+<br/>
+<hr/>
+
+<a href="/auth/regPage">Создать исполнителя</a>
+<br/>
+<hr/>
+<a href="/person/addAdmin">Добавить ROLE_ADMIN</a>
+<hr/>
+<hr/>
+<a href="/person/addUser">Добавить ROLE_USER</a>
+<hr/>
+<a href="/hello">Hello page!!!</a>
+<br/>
+</body>
+</html>

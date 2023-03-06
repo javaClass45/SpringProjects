@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <title>New event</title>
+</head>
+<body>
+<form th:method="POST" th:action="@{/event}" th:object="${event}">
+
+    <label for="title">Введите название задачи:</label>
+    <input type="text" th:field="*{title}" id="title" size="50"/>
+    <div style="color:red" th:if="${#fields.hasErrors('title')}" th:errors="*{title}">title Errors</div>
+    <br/>
+    <label for="description">Введите полное описание:</label>
+    <input type="text" th:field="*{description}" id="description" size="50"/>
+    <div style="color:red" th:if="${#fields.hasErrors('description')}" th:errors="*{description}">description Errors</div>
+    <br/>
+    <label for="deadline_date">Введите дату выполнения:(yyyy-MM-dd)</label>
+    <input type="date" th:field="*{deadlineDate}" id="deadline_date"/>
+    <div style="color:red" th:if="${#fields.hasErrors('deadlineDate')}" th:errors="*{deadlineDate}">deadlineDate   Errors</div>
+    <br/>
+    <label for="deadline_time">Введите время выполнения: (HH:mm)</label>
+    <input type="time" th:field="*{deadlineTime}" id="deadline_time"/>
+    <div style="color:red" th:if="${#fields.hasErrors('deadlineTime')}" th:errors="*{deadlineTime}">deadlineTime   Errors</div>
+    <br/>
+    <label for="complited">Отметка об испонении:</label>
+    <input type="checkbox" th:field="*{complited}" id="complited"/>
+    <div style="color:red" th:if="${#fields.hasErrors('complited')}" th:errors="*{complited}">complited   Errors</div>
+    <br/>
+
+    <input type="submit" value="Создать!"/>
+</form>
+<hr/>
+<a href="/hello">Hello page!!!</a>
+<br/>
+
+</body>
+</html>
+
+
+

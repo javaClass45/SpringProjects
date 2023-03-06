@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Show</title>
+</head>
+<body>
+<p th:text="${event.getTitle() + ', ' + event.getDescription() + ', '
+        + event.getDeadlineDate()+ ', ' + event.getDeadlineTime()+ ', '
+         + event.isComplited()}">event</p>
+
+
+<div th:if="${owner}">
+    <span>Исполнитель сейчас:</span> <span th:text="${owner.getUsername()}">Person Name</span>
+    <div th:if="${person.getRole() == 'ROLE_ADMIN'}">
+        <form th:method="PATCH" th:action="@{/event/{id}/release(id=${event.getId()})}">
+            <input type="submit" value="Снять задачу с исполнителя"/>
+        </form>
+    </div>
+</div>
+
+<div th:if="${people}">
+    <span>У этой задачи нет исполнителя, кого назначим?</span>
+    <form th:method="PATCH" th:action="@{/event/{id}/assign(id=${event.getId()})}">
+        <label for="person">Выберите исполнителя:</label>
+        <select th:object="${person}" th:field="*{id}" id="person">
+            <option th:each="person : ${people}" th:value="${person.getId()}"
+                    th:text="${person.getUsername()}">
+            </option>
+        </select>
+        <input type="submit" value="Назначить задачу"/>
+    </form>
+</div>
+
+
+<hr/>
+
+<form th:method="GET" th:action="@{/event/{id}/edit(id=${event.getId()})}">
+    <input type="submit" value="Редактировать"/>
+</form>
+
+<form th:method="DELETE" th:action="@{/event/{id}(id=${event.getId()})}">
+    <input type="submit" value="Удалить"/>
+</form>
+<hr/>
+<a href="/hello">Hello page!!!</a>
+<br/>
+</body>
+</html>

@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <title>Events</title>
+</head>
+<body>
+
+<div th:if="${person.getRole() == 'ROLE_ADMIN'}">
+    <table border="1">
+        <tr>
+            <td><b>Задачи:</b>
+            </td>
+            <td><b>Исполнитель:</b>
+            </td>
+        </tr>
+        <div th:each="event : ${events}">
+            <tr>
+                <td>
+                    <a th:href="@{/event/{id}(id=${event.getId()})}"
+                       th:text="${event.getTitle() + ', ' + event.getDescription() + ', '
+        + event.getDeadlineDate()+ ', ' + event.getDeadlineTime() + ', '
+         + event.isComplited()}">event</a>
+                </td>
+                <td align="center">
+                    <div th:if="${event.getOwner() != null}">
+       <span th:text="${event.getOwner().getUsername()}">
+        Person Name</span>
+                    </div>
+                    <div th:if="${event.getOwner() == null}">
+                        <span>нет исполнителя--чеее!!!</span>
+                    </div>
+                </td>
+            </tr>
+        </div>
+    </table>
+</div>
+
+
+<div th:if="${person.getRole() == 'ROLE_USER'}">
+    <p th:text="${person.getUsername()}">VALUE</p>
+
+
+    <table border="1">
+        <tr>
+            <td><b>Задачи:</b>
+            </td>
+
+        </tr>
+
+        <tr th:each="event : ${events}">
+
+            <div th:if="${event.getOwner() != null}">
+
+                <td th:if="${event.getOwner().getUsername() == person.getUsername()}">
+                    <a th:href="@{/event/{id}(id=${event.getId()})}"
+                       th:text="${event.getTitle() + ', ' + event.getDescription() + ', '
+                        + event.getDeadlineDate()+ ', ' + event.getDeadlineTime() + ', '
+                         + event.isComplited()}">event</a>
+
+                </td>
+            </div>
+
+        </tr>
+
+    </table>
+</div>
+
+<br/>
+<hr/>
+<a href="/event/new">Добавить event</a>
+<hr/>
+<hr/>
+<a href="/event/search">Поиск event</a>
+<hr/>
+<a href="/hello">Hello page!!!</a>
+<br/>
+</body>
+</html>

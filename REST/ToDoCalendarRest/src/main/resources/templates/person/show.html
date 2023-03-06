@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Show</title>
+</head>
+<body>
+<p th:text="${person.getUsername()}" >VALUE</p>
+<p th:text="${person.getEmail()}">VALUE</p>
+<p th:text="${person.getRole()}" >VALUE</p>
+
+
+
+
+<div th:if="${event.isEmpty}">
+    <p> У исполнителя пока нет задач</p>
+    <hr/>
+</div>
+
+<div th:if="${!event.isEmpty}">
+         <hr/>
+        <b>Задачи:</b>
+    <br/>
+    <table th:each="event : ${event}">
+        <tr>
+            <td>
+                <span th:text="${event.getTitle() + ', ' + event.getDescription()}"
+                      th:style="${event.isComplited()} ? 'color: green' : 'color: black'">
+                    EVENT
+                </span>
+            </td>
+        </tr>
+    </table>
+    <hr/>
+</div>
+
+<form th:method="GET" th:action="@{/person/{id}/edit(id=${person.getId()})}">
+    <input type="submit" value="Редактировать"/>
+</form>
+
+<form th:method="DELETE" th:action="@{/person/{id}(id=${person.getId()})}">
+    <input type="submit" value="Удалить"/>
+</form>
+<hr/>
+<a href="/hello">Hello page!!!</a>
+<br/>
+</body>
+</html>

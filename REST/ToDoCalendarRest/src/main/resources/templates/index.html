@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>index</title>
+</head>
+<body>
+<div> блок див статическая индекс страница в корне</div>
+<p>тут какой-то текст тут какой-то текст тут какой-то текст тут какой-то текст тут какой-то
+    текст тут какой-то текст тут какой-то текст тут какой-то текст тут какой-то текст </p>
+<div> ещё спам </div>
+
+<form th:action="@{/logout}" th:method="POST">
+    <input type="submit" value="Logout">
+</form>
+<form th:action="@{/auth/regPage}" th:method="POST">
+    <input type="submit" value="regPage">
+</form>
+<hr/>
+<a href="/hello">Hello page!!!</a>
+<br/>
+</body>
+</html>

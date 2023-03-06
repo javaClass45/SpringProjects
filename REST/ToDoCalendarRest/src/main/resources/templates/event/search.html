@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <title>Search</title>
+</head>
+<body>
+
+<form th:method="POST" th:action="@{/event/search}">
+    <label for="query">Введите поисковый запрос:</label>
+    <input type="text" id="query" name="query"/>
+    <br/>
+    <input type="submit" value="Искать!"/>
+</form>
+<div th:if="${events}">
+    <div th:if="${events.isEmpty()}">
+    <span>Задач не найдено</span>
+    </div>
+    <div th:each="event : ${events}">
+        <p th:text="${event.getTitle() + ', ' + event.getDescription()}">book</p>
+        <div th:if="${event.getOwner() != null}">
+            <span> Исполнитель задачи сейчас: </span><span th:text="${event.getOwner().getUsername()}">Person Name</span>
+        </div>
+        <div th:if="${event.getOwner() == null}">
+            <span>нет исполнителя !!!</span>
+        </div>
+        <hr/>
+    </div>
+</div>
+<hr/>
+<a href="/hello">Hello page!!!</a>
+<br/>
+</body>
+</html>
