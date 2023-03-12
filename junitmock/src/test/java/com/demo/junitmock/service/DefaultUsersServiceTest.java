@@ -8,10 +8,13 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.util.Collections;
+import java.util.List;
+import java.util.Optional;
 
 import static com.demo.junitmock.prototype.UsersPrototypeTest.aUser;
 import static com.demo.junitmock.prototype.UsersPrototypeTest.aUserDTO;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
@@ -68,4 +71,8 @@ class DefaultUsersServiceTest {
         when(usersRepository.findAll()).thenReturn(Collections.singletonList(aUser()));
 
     }
+
+
+
+
 }
