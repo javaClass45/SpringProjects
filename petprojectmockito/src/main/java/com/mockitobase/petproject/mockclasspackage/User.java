@@ -7,6 +7,9 @@ public class User {
 
    private String name;
 
+    private String[] array = {"Neo","Trinity","Morpheus","Niobe"};
+
+
     public String getName() {
         return name;
     }
@@ -20,4 +23,11 @@ public class User {
         throw new IllegalArgumentException();
     }
 
+    public String[] getArray() {
+        return array;
+    }
+
+    public void setArray(String[] array) {
+        this.array = array;
+    }
 }

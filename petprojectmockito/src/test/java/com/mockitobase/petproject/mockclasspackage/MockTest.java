@@ -39,11 +39,30 @@ class MockTest {
         mocklist.add("Neo");
         mocklist.add("Trinity");
         //эти методы будут работать!
-
-
-
-
     }
+
+    @Test
+    public void whenMockListAnnotation() {
+        //создаем правило: вернуть 10 при вызове метода size
+        Mockito.when(mocklist.size() ).thenReturn(10);
+
+        //тут вызывается метод и вернет 10!!
+        assertEquals(10, mocklist.size());
+    }
+
+    @Test //todo "not worked"
+    public void whenGetAny() {
+        User mockUser = mock(User.class);
+        when(mockUser.getArray()[anyInt()]).thenReturn("Trinity");
+        assertEquals("Trinity", mockUser.getArray()[2]);
+    }
+
+    @Test
+    public void doReturnGetAny() {
+        doReturn("Neo").when(mocklist).get(anyInt());
+        assertEquals("Neo", mocklist.get(10));
+    }
+
 
     @Test
     public void whenAddUserName() {
@@ -59,11 +78,10 @@ class MockTest {
     }
 
 
-
     @Test
     public void whenThrowExceptionIAE() {
         when(user.throwException()).thenThrow(new IllegalArgumentException());
-        assertThrows(IllegalArgumentException.class,() -> {
+        assertThrows(IllegalArgumentException.class, () -> {
             user.throwException();
         });
     }
@@ -72,14 +90,10 @@ class MockTest {
     @Test
     public void whenThrowException() {
         doThrow(IllegalArgumentException.class).when(user).throwException();
-        assertThrows(IllegalArgumentException.class,() -> {
+        assertThrows(IllegalArgumentException.class, () -> {
             user.throwException();
         });
     }
-
-
-
-
 
 
 }
