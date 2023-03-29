@@ -1,5 +1,6 @@
 package com.mockitobase.petproject.mockclasspackage;
 
+import com.mockitobase.petproject.model.User;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
