@@ -54,8 +54,8 @@ class MockTest {
     @Test //todo "not worked"
     public void whenGetAny() {
         User mockUser = mock(User.class);
-        when(mockUser.getArray()[anyInt()]).thenReturn("Trinity");
-        assertEquals("Trinity", mockUser.getArray()[2]);
+        when(mockUser.getItems(anyInt()).thenReturn("anyString");
+        assertEquals("Trinity", mockUser.getItems());
     }
 
     @Test

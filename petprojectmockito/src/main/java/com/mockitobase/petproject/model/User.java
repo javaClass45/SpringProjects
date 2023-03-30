@@ -9,7 +9,7 @@ import java.util.List;
 public class User {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
     private int id;
 
@@ -20,10 +20,8 @@ public class User {
     private String password;
 
 
-    //   massiv
-    // todo dodelat
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private List<Massiv> items;
+    private List<Product> items;
 
 
     public User() {
@@ -35,27 +33,20 @@ public class User {
         this.password = password;
     }
 
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-
-    public Exception throwException() {
-        throw new IllegalArgumentException();
-    }
-
-
-
     public int getId() {
         return id;
     }
 
     public void setId(int id) {
         this.id = id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 
     public String getPassword() {
@@ -66,11 +57,24 @@ public class User {
         this.password = password;
     }
 
-    public List<Massiv> getItems() {
+    public List<Product> getItems() {
         return items;
     }
 
-    public void setItems(List<Massiv> items) {
+    public void setItems(List<Product> items) {
         this.items = items;
     }
+
+    public Product getItem(int i) {
+        return items.get(i);
+    }
+
+    public void setItem(Product item) {
+        this.items.add(item);
+    }
+
+    public Exception throwException() {
+        throw new IllegalArgumentException();
+    }
+
 }
