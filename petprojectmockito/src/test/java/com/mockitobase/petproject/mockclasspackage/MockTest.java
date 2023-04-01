@@ -1,5 +1,6 @@
 package com.mockitobase.petproject.mockclasspackage;
 
+import com.mockitobase.petproject.model.Product;
 import com.mockitobase.petproject.model.User;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -28,7 +29,8 @@ class MockTest {
     User user;
 
     @Spy
-    List<String> mocklist = new ArrayList<String>();
+    Product item = Mockito.spy(new Product("MockTestItem", 10));
+    User testUser = Mockito.spy(new User("TestMockUser", "123"));
 
     @Test
     public void whenNotUseMockAnnotation_thenCorrect() {
@@ -43,18 +45,20 @@ class MockTest {
 
     @Test
     public void whenMockAnnotation() {
-        mocklist.add("Neo");
-        mocklist.add("Trinity");
+        item.setId(15);
+        item.setItem("toster");
+        item.setUser(testUser);
+
         //эти методы будут работать!
     }
 
     @Test
     public void whenMockListAnnotation() {
         //создаем правило: вернуть 10 при вызове метода size
-        Mockito.when(mocklist.size() ).thenReturn(10);
+        Mockito.when(item.getId()).thenReturn(10);
 
         //тут вызывается метод и вернет 10!!
-        assertEquals(10, mocklist.size());
+        assertEquals(10, item.getId());
     }
 
     @Test //todo "not worked"
@@ -66,8 +70,8 @@ class MockTest {
 
     @Test
     public void doReturnGetAny() {
-        doReturn("Neo").when(mocklist).get(anyInt());
-        assertEquals("Neo", mocklist.get(10));
+        doReturn(item).when(testUser).getItem(anyInt());
+        assertEquals(item, testUser.getItem(10));
     }
 
 
