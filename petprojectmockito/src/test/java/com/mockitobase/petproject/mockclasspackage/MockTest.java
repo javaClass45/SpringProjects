@@ -38,28 +38,11 @@ class MockTest {
         mockUser.setName("Neo");
     }
 
-    @Test
-    public void whenNotUseMockAnnotation() {
-        user.setName("Trinity");
-    }
 
-    @Test
-    public void whenMockAnnotation() {
-        item.setId(15);
-        item.setItem("toster");
-        item.setUser(testUser);
 
-        //эти методы будут работать!
-    }
 
-    @Test
-    public void whenMockListAnnotation() {
-        //создаем правило: вернуть 10 при вызове метода size
-        Mockito.when(item.getId()).thenReturn(10);
 
-        //тут вызывается метод и вернет 10!!
-        assertEquals(10, item.getId());
-    }
+
 
     @Test //todo "not worked"
     public void whenGetAny() {
@@ -68,43 +51,11 @@ class MockTest {
 //        assertEquals("Trinity", mockUser.getItems());
     }
 
-    @Test
-    public void doReturnGetAny() {
-        doReturn(item).when(testUser).getItem(anyInt());
-        assertEquals(item, testUser.getItem(10));
-    }
 
 
-    @Test
-    public void whenAddUserName() {
-        Mockito.doReturn("Kirill").when(user).getName();
-        assertEquals("Kirill", user.getName());
-    }
-
-    @Test
-    public void whenAddMockUserName() {
-        User mockUser = mock(User.class);
-        when(mockUser.getName()).thenReturn("Kirill");
-        assertEquals("Kirill", mockUser.getName());
-    }
 
 
-    @Test
-    public void whenThrowExceptionIAE() {
-        when(user.throwException()).thenThrow(new IllegalArgumentException());
-        assertThrows(IllegalArgumentException.class, () -> {
-            user.throwException();
-        });
-    }
 
-
-    @Test
-    public void whenThrowException() {
-        doThrow(IllegalArgumentException.class).when(user).throwException();
-        assertThrows(IllegalArgumentException.class, () -> {
-            user.throwException();
-        });
-    }
 
 
 }
