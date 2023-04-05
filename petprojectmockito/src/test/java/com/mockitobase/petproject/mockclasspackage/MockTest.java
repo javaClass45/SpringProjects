@@ -5,6 +5,7 @@ import com.mockitobase.petproject.model.User;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
+import org.mockito.MockedStatic;
 import org.mockito.Mockito;
 import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
@@ -12,6 +13,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import java.util.ArrayList;
 import java.util.List;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -48,7 +50,7 @@ class MockTest {
         //вызов метода
         String name = mockList.get(6);
         //проверяем вызывался ли метод
-        Mockito.verify(mockList,atLeastOnce()).get(6);
+        Mockito.verify(mockList, atLeastOnce()).get(6);
     }
 
 
@@ -59,6 +61,14 @@ class MockTest {
 
         //проверяем бросится ли IllegalStateException при вызове метода size
         assertThrows(IllegalStateException.class, () -> mockList.size());
+    }
+
+    @Test
+    void givenStaticMethodWithNoArgs() {
+        try (MockedStatic<StaticUtils> utils = Mockito.mockStatic(StaticUtils.class)) {
+            utils.when(StaticUtils::name).thenReturn("Hellou!!");
+            assertEquals("Hellou!!", StaticUtils.name());
+        }
     }
 
 
