@@ -1,11 +1,14 @@
 package com.mockitobase.petproject.model;
 
 
+import org.springframework.stereotype.Component;
+
 import javax.persistence.*;
 import java.util.List;
 
 @Entity
 @Table(name = "users")
+@Component
 public class User {
 
     @Id
