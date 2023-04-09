@@ -32,4 +32,14 @@ public class UserService {
     public boolean add(User user) {
         return users.add(user);
     }
+
+    public Optional<User> login(String name, String pass) {
+        return users.stream()
+                .filter(user -> user.getName().equals(name))
+                .filter(user -> user.getPassword().equals(pass))
+                .findFirst();
+
+
+    }
+
 }

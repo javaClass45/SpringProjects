@@ -7,6 +7,8 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.util.Optional;
+
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -14,6 +16,8 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 @ExtendWith(MockitoExtension.class)
 public class UserServiceTest {
 
+
+    private static final User PEDRO = new User("Pedro", "123");
 
     @Mock
     User user;
@@ -50,8 +54,35 @@ public class UserServiceTest {
         assertEquals(2, users.size());
     }
 
+    @Test
+    void loginSuccessIfExist() {
+        userService.add(PEDRO);
+        Optional<User> mayBeUser = userService.login("Pedro","123");
+        assertTrue(mayBeUser.isPresent());
+        mayBeUser.ifPresent(user -> assertEquals(PEDRO, user));
+    }
+
+    @Test
+    void logicFailIfPassIsNotCorrect() {
+        userService.add(PEDRO);
+        Optional<User> mayBeUser = userService.login("Pedro","111");
+        assertTrue(mayBeUser.isEmpty());
+        mayBeUser.ifPresent(user -> assertEquals(PEDRO, user));
+    }
+
+    @Test
+    void logicFailIfUserDoesNotExist() {
+        userService.add(PEDRO);
+        Optional<User> mayBeUser = userService.login("notUser","notPass");
+        assertTrue(mayBeUser.isEmpty());
+        mayBeUser.ifPresent(user -> assertEquals(PEDRO, user));
+    }
+
+
+
     @AfterEach
     void deleteDataDB() {
+
         System.out.println("After each: " + this);
     }
 
