@@ -1,5 +1,6 @@
 package com.mockitobase.petproject.mockclasspackage;
 
+import com.mockitobase.petproject.mockclasspackage.Mock.InnerStaticUtils;
 import com.mockitobase.petproject.model.Product;
 import com.mockitobase.petproject.model.User;
 import org.junit.jupiter.api.Test;
@@ -13,10 +14,10 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import java.util.ArrayList;
 import java.util.List;
 
+import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 import static org.mockito.internal.verification.VerificationModeFactory.atLeastOnce;
 
 @ExtendWith(MockitoExtension.class)
@@ -35,6 +36,17 @@ class MockTest {
     @Spy
     Product item = Mockito.spy(new Product("MockTestItem", 10));
     User testUser = Mockito.spy(new User("TestMockUser", "123"));
+
+
+    @Test
+    void givenInnerStaticMethodWithNoArgs() {
+        assertThat(InnerStaticUtils.name()).isEqualTo("**!**");
+        try (var mockedStatic = mockStatic(InnerStaticUtils.class)) {
+            mockedStatic.when(InnerStaticUtils::name).thenReturn("ky-ky");
+            assertEquals("ky-ky", InnerStaticUtils.name());
+        }
+    }
+
 
 
     @Test

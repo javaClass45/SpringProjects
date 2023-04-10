@@ -25,7 +25,9 @@ public class UserService {
 
 
     public List<User> getAll() {
-//        return userRepository.findAll(); todo вспомнить как через Optional(null)
+//        Optional<List<User>> userList = Optional.of(userRepository.findAll());
+//        return userList.orElse(users);// todo вспомнить как через Optional(null)
+
         return users;
     }
 

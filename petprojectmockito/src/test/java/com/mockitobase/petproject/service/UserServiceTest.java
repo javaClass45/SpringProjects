@@ -2,6 +2,7 @@ package com.mockitobase.petproject.service;
 
 import com.mockitobase.petproject.model.User;
 import com.mockitobase.petproject.repository.UserRepository;
+import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
@@ -9,6 +10,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.Optional;
 
+import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -51,6 +53,8 @@ public class UserServiceTest {
         userService.add(new User());
 
         var users = userService.getAll();
+       Assertions.assertThat(users).hasSize(2);
+
         assertEquals(2, users.size());
     }
 
