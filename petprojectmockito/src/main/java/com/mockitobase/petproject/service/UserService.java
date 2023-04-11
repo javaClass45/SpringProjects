@@ -7,6 +7,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
+import java.util.function.Function;
+
+import static java.util.function.Function.identity;
+import static java.util.stream.Collectors.toMap;
 
 @Service
 public class UserService {
@@ -31,11 +35,12 @@ public class UserService {
         return users;
     }
 
-    public boolean add(User user) {
-        return users.add(user);
+    public void add(User... users) {
+        this.users.addAll( Arrays.asList(users));
     }
 
     public Optional<User> login(String name, String pass) {
+        if (name == null || pass == null) throw new IllegalArgumentException("username or pass is NULL");
         return users.stream()
                 .filter(user -> user.getName().equals(name))
                 .filter(user -> user.getPassword().equals(pass))
@@ -44,4 +49,8 @@ public class UserService {
 
     }
 
+    public Map<Integer, User> getAllConvertedById() {
+        return users.stream()
+                .collect(toMap(User::getId, identity()));
+    }
 }

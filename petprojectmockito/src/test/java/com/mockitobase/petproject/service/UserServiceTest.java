@@ -8,18 +8,21 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.util.Map;
 import java.util.Optional;
 
-import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertAll;
 
+//@Nested
 @TestInstance(TestInstance.Lifecycle.PER_CLASS) // .PER_METHOD for static BeforeAll/AfterAll
 @ExtendWith(MockitoExtension.class)
 public class UserServiceTest {
 
 
-    private static final User PEDRO = new User("Pedro", "123");
+    private static final User PEDRO = new User(1,"Pedro", "123");
+    private static final User TOMAS = new User(2,"Tomas", "321");
 
     @Mock
     User user;
@@ -28,7 +31,7 @@ public class UserServiceTest {
 
     @BeforeAll
     void init() {
-        System.out.println("BeforeAll: " + this );// in static context - "this" NOT WORKED!!!
+        System.out.println("BeforeAll: " + this);// in static context - "this" NOT WORKED!!!
     }
 
 
@@ -53,7 +56,7 @@ public class UserServiceTest {
         userService.add(new User());
 
         var users = userService.getAll();
-       Assertions.assertThat(users).hasSize(2);
+        assertThat(users).hasSize(2);
 
         assertEquals(2, users.size());
     }
@@ -61,15 +64,49 @@ public class UserServiceTest {
     @Test
     void loginSuccessIfExist() {
         userService.add(PEDRO);
-        Optional<User> mayBeUser = userService.login("Pedro","123");
+        Optional<User> mayBeUser = userService.login("Pedro", "123");
         assertTrue(mayBeUser.isPresent());
         mayBeUser.ifPresent(user -> assertEquals(PEDRO, user));
     }
 
     @Test
+    void throwExceptionIfUsernameOrPasswordIsNull() {
+//  1--------------------
+        /*try {
+            userService.login(null, "dummy");
+            fail("login should throw exception on NULL username");
+        } catch (IllegalArgumentException e) {
+            assertTrue(true);
+        }*/
+//  2--------------------
+//        assertThrows(IllegalArgumentException.class,
+//                () -> userService.login(null, "dummy"));
+
+//  3--------------------
+        assertAll(
+                () -> assertThrows(IllegalArgumentException.class, () -> userService.login(null, "dummy")),
+                () -> assertThrows(IllegalArgumentException.class, () -> userService.login("dummy", null))
+        );
+    }
+
+
+
+    @Test
+    void loginFailIfPasswordIsNotCorrect() {
+        userService.add(PEDRO, TOMAS);
+        Map<Integer, User> users = userService.getAllConvertedById();
+
+        assertAll(
+                () -> assertThat(users).containsKeys(PEDRO.getId(), TOMAS.getId()),
+                () -> assertThat(users).containsValues(TOMAS, PEDRO)
+        );
+    }
+
+
+    @Test
     void logicFailIfPassIsNotCorrect() {
         userService.add(PEDRO);
-        Optional<User> mayBeUser = userService.login("Pedro","111");
+        Optional<User> mayBeUser = userService.login("Pedro", "111");
         assertTrue(mayBeUser.isEmpty());
         mayBeUser.ifPresent(user -> assertEquals(PEDRO, user));
     }
@@ -77,11 +114,10 @@ public class UserServiceTest {
     @Test
     void logicFailIfUserDoesNotExist() {
         userService.add(PEDRO);
-        Optional<User> mayBeUser = userService.login("notUser","notPass");
+        Optional<User> mayBeUser = userService.login("notUser", "notPass");
         assertTrue(mayBeUser.isEmpty());
         mayBeUser.ifPresent(user -> assertEquals(PEDRO, user));
     }
-
 
 
     @AfterEach
@@ -92,6 +128,6 @@ public class UserServiceTest {
 
     @AfterAll
     void initAfter() {
-        System.out.println("AfterAll: " + this );
+        System.out.println("AfterAll: " + this);
     }
 }
