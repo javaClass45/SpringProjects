@@ -16,6 +16,8 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
 //@Nested
+@Tag("fast")
+@Tag("user")
 @TestInstance(TestInstance.Lifecycle.PER_CLASS) // .PER_METHOD for static BeforeAll/AfterAll
 @ExtendWith(MockitoExtension.class)
 public class UserServiceTest {
@@ -62,6 +64,7 @@ public class UserServiceTest {
     }
 
     @Test
+    @Tag("login")
     void loginSuccessIfExist() {
         userService.add(PEDRO);
         Optional<User> mayBeUser = userService.login("Pedro", "123");
@@ -84,14 +87,20 @@ public class UserServiceTest {
 
 //  3--------------------
         assertAll(
-                () -> assertThrows(IllegalArgumentException.class, () -> userService.login(null, "dummy")),
-                () -> assertThrows(IllegalArgumentException.class, () -> userService.login("dummy", null))
+                () -> assertThrows(IllegalArgumentException.class,
+                        () -> userService.login(null, "dummy")),
+                () -> assertThrows(IllegalArgumentException.class,
+                        () -> userService.login("dummy", null))
         );
     }
 
 
 
+
+
+
     @Test
+    @Tag("login")
     void loginFailIfPasswordIsNotCorrect() {
         userService.add(PEDRO, TOMAS);
         Map<Integer, User> users = userService.getAllConvertedById();
@@ -104,7 +113,8 @@ public class UserServiceTest {
 
 
     @Test
-    void logicFailIfPassIsNotCorrect() {
+    @Tag("login")
+    void loginFailIfPassIsNotCorrect() {
         userService.add(PEDRO);
         Optional<User> mayBeUser = userService.login("Pedro", "111");
         assertTrue(mayBeUser.isEmpty());
@@ -112,7 +122,8 @@ public class UserServiceTest {
     }
 
     @Test
-    void logicFailIfUserDoesNotExist() {
+    @Tag("login")
+    void loginFailIfUserDoesNotExist() {
         userService.add(PEDRO);
         Optional<User> mayBeUser = userService.login("notUser", "notPass");
         assertTrue(mayBeUser.isEmpty());
