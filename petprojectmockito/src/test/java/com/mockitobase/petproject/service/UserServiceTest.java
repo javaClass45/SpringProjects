@@ -15,9 +15,10 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
-//@Nested
+
 @Tag("fast")
 @Tag("user")
+//@TestMethodOrder(MethodOrderer.Random.class)// anti-pattern
 @TestInstance(TestInstance.Lifecycle.PER_CLASS) // .PER_METHOD for static BeforeAll/AfterAll
 @ExtendWith(MockitoExtension.class)
 public class UserServiceTest {
@@ -44,6 +45,7 @@ public class UserServiceTest {
     }
 
     @Test
+    @DisplayName("users will be empty if no user added") //для красоты отбражения в списке выполненных
     void usersEmptyIfNoUserAdded() {
         System.out.println("Test1: " + this);
         var users = userService.getAll();
@@ -63,14 +65,7 @@ public class UserServiceTest {
         assertEquals(2, users.size());
     }
 
-    @Test
-    @Tag("login")
-    void loginSuccessIfExist() {
-        userService.add(PEDRO);
-        Optional<User> mayBeUser = userService.login("Pedro", "123");
-        assertTrue(mayBeUser.isPresent());
-        mayBeUser.ifPresent(user -> assertEquals(PEDRO, user));
-    }
+
 
     @Test
     void throwExceptionIfUsernameOrPasswordIsNull() {
@@ -96,41 +91,6 @@ public class UserServiceTest {
 
 
 
-
-
-
-    @Test
-    @Tag("login")
-    void loginFailIfPasswordIsNotCorrect() {
-        userService.add(PEDRO, TOMAS);
-        Map<Integer, User> users = userService.getAllConvertedById();
-
-        assertAll(
-                () -> assertThat(users).containsKeys(PEDRO.getId(), TOMAS.getId()),
-                () -> assertThat(users).containsValues(TOMAS, PEDRO)
-        );
-    }
-
-
-    @Test
-    @Tag("login")
-    void loginFailIfPassIsNotCorrect() {
-        userService.add(PEDRO);
-        Optional<User> mayBeUser = userService.login("Pedro", "111");
-        assertTrue(mayBeUser.isEmpty());
-        mayBeUser.ifPresent(user -> assertEquals(PEDRO, user));
-    }
-
-    @Test
-    @Tag("login")
-    void loginFailIfUserDoesNotExist() {
-        userService.add(PEDRO);
-        Optional<User> mayBeUser = userService.login("notUser", "notPass");
-        assertTrue(mayBeUser.isEmpty());
-        mayBeUser.ifPresent(user -> assertEquals(PEDRO, user));
-    }
-
-
     @AfterEach
     void deleteDataDB() {
 
@@ -141,4 +101,51 @@ public class UserServiceTest {
     void initAfter() {
         System.out.println("AfterAll: " + this);
     }
+
+    @Nested
+    @DisplayName("group test for user login functionality")
+    @Tag("login")
+    class LoginTest {
+        @Test
+        void loginFailIfPassIsNotCorrect() {
+            userService.add(PEDRO);
+            Optional<User> mayBeUser = userService.login("Pedro", "111");
+            assertTrue(mayBeUser.isEmpty());
+            mayBeUser.ifPresent(user -> assertEquals(PEDRO, user));
+        }
+
+        @Test
+//        @Tag("login")
+        void loginFailIfUserDoesNotExist() {
+            userService.add(PEDRO);
+            Optional<User> mayBeUser = userService.login("notUser", "notPass");
+            assertTrue(mayBeUser.isEmpty());
+            mayBeUser.ifPresent(user -> assertEquals(PEDRO, user));
+        }
+
+        @Test
+//        @Tag("login")
+        void loginFailIfPasswordIsNotCorrect() {
+            userService.add(PEDRO, TOMAS);
+            Map<Integer, User> users = userService.getAllConvertedById();
+
+            assertAll(
+                    () -> assertThat(users).containsKeys(PEDRO.getId(), TOMAS.getId()),
+                    () -> assertThat(users).containsValues(TOMAS, PEDRO)
+            );
+        }
+
+        @Test
+//        @Tag("login")
+        void loginSuccessIfExist() {
+            userService.add(PEDRO);
+            Optional<User> mayBeUser = userService.login("Pedro", "123");
+            assertTrue(mayBeUser.isPresent());
+            mayBeUser.ifPresent(user -> assertEquals(PEDRO, user));
+        }
+
+    }
+
+
+
 }
