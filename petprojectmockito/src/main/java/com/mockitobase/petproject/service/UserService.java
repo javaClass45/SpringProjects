@@ -16,15 +16,17 @@ import static java.util.stream.Collectors.toMap;
 public class UserService {
 
     private final User user;
-    private final UserRepository userRepository;
+
+//    private final UserRepository userRepository;
 
     private final List<User> users = new ArrayList<>();
 
 
+
     @Autowired
-    public UserService(User user, UserRepository userRepository) {
+    public UserService(User user/*, UserRepository userRepository*/) {
         this.user = user;
-        this.userRepository = userRepository;
+//        this.userRepository = userRepository;
     }
 
 

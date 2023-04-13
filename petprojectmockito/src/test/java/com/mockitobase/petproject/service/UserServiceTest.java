@@ -1,6 +1,7 @@
 package com.mockitobase.petproject.service;
 
 import com.mockitobase.petproject.model.User;
+import com.mockitobase.petproject.paramresolver.UserServiceParamResolver;
 import com.mockitobase.petproject.repository.UserRepository;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.*;
@@ -21,6 +22,9 @@ import static org.junit.jupiter.api.Assertions.assertAll;
 //@TestMethodOrder(MethodOrderer.Random.class)// anti-pattern
 @TestInstance(TestInstance.Lifecycle.PER_CLASS) // .PER_METHOD for static BeforeAll/AfterAll
 @ExtendWith(MockitoExtension.class)
+@ExtendWith({
+        UserServiceParamResolver.class
+})
 public class UserServiceTest {
 
 
@@ -28,9 +32,13 @@ public class UserServiceTest {
     private static final User TOMAS = new User(2,"Tomas", "321");
 
     @Mock
-    User user;
-    UserRepository userRepository;
+    private User user;
+    private UserRepository userRepository;
     private UserService userService;
+
+    public UserServiceTest(TestInfo testInfo) {
+        System.out.println(testInfo);
+    }
 
     @BeforeAll
     void init() {
@@ -39,9 +47,11 @@ public class UserServiceTest {
 
 
     @BeforeEach
-    void prepare() {
+    void prepare(UserService userService) {
         System.out.println("BeforeEach: " + this);
-        userService = new UserService(user, userRepository);
+//        userService = new UserService(user, userRepository);
+        this.userService = userService;
+
     }
 
     @Test
