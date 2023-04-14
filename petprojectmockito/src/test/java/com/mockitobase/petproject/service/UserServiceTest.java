@@ -6,11 +6,14 @@ import com.mockitobase.petproject.repository.UserRepository;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.*;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Stream;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
@@ -26,6 +29,7 @@ import static org.junit.jupiter.api.Assertions.assertAll;
         UserServiceParamResolver.class
 })
 public class UserServiceTest {
+
 
 
     private static final User PEDRO = new User(1,"Pedro", "123");
@@ -101,6 +105,7 @@ public class UserServiceTest {
 
 
 
+
     @AfterEach
     void deleteDataDB() {
 
@@ -111,6 +116,8 @@ public class UserServiceTest {
     void initAfter() {
         System.out.println("AfterAll: " + this);
     }
+
+
 
     @Nested
     @DisplayName("group test for user login functionality")
@@ -143,6 +150,9 @@ public class UserServiceTest {
                     () -> assertThat(users).containsKeys(PEDRO.getId(), TOMAS.getId()),
                     () -> assertThat(users).containsValues(TOMAS, PEDRO)
             );
+
+
+
         }
 
         @Test
@@ -154,8 +164,35 @@ public class UserServiceTest {
             mayBeUser.ifPresent(user -> assertEquals(PEDRO, user));
         }
 
+
+        @ParameterizedTest(name = "{arguments} test")
+        @DisplayName("login param test")
+//    @ArgumentsSource(ArgumentsProvider.class)// под него нужно писаь свой провайдер
+//        @NullSource
+//        @EmptySource
+//    @NullAndEmptySource
+//        @ValueSource(strings = {
+//                "Pedro", "Tomas"
+//        })
+        // самый часто используемый @MethodSource
+        @MethodSource("com.mockitobase.petproject.service.UserServiceTest#getArgForLoginTest")
+//        @CsvFileSource(resources = "/login-test-data.csv", delimiter = ',', numLinesToSkip = 1)
+        void loginParamTest(String username, String password, Optional<User> user) {
+            userService.add(PEDRO, TOMAS);
+
+            var maybeUser = userService.login(username, password);
+            assertThat(maybeUser).isEqualTo(user);
+        }
+
     }
 
-
+    private static Stream<Arguments> getArgForLoginTest() {
+        return Stream.of(
+                Arguments.of("Pedro", "123", Optional.of(PEDRO)),
+                Arguments.of("Tomas", "321", Optional.of(TOMAS)),
+                Arguments.of("Tomas", "dummy", Optional.empty()),
+                Arguments.of("dummy", "123", Optional.empty())
+                );
+    }
 
 }
