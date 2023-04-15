@@ -2,6 +2,10 @@ package com.mockitobase.petproject.service;
 
 
 
+import com.mockitobase.petproject.extention.ConditionalExtension;
+import com.mockitobase.petproject.extention.GlobalExtension;
+import com.mockitobase.petproject.extention.PostProcessingExtension;
+import com.mockitobase.petproject.extention.ThrowableExtension;
 import com.mockitobase.petproject.model.User;
 import com.mockitobase.petproject.paramresolver.UserServiceParamResolver;
 import com.mockitobase.petproject.repository.UserRepository;
@@ -13,6 +17,7 @@ import org.junit.jupiter.params.provider.*;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.io.IOException;
 import java.time.Duration;
 import java.util.Map;
 import java.util.Optional;
@@ -30,7 +35,11 @@ import static org.junit.jupiter.api.Assertions.assertAll;
 @TestInstance(TestInstance.Lifecycle.PER_CLASS) // .PER_METHOD for static BeforeAll/AfterAll
 @ExtendWith(MockitoExtension.class)
 @ExtendWith({
-        UserServiceParamResolver.class
+        UserServiceParamResolver.class,
+        GlobalExtension.class,
+        PostProcessingExtension.class,
+        ConditionalExtension.class,
+        ThrowableExtension.class
 })
 public class UserServiceTest {
 
@@ -64,7 +73,11 @@ public class UserServiceTest {
 
     @Test
     @DisplayName("users will be empty if no user added") //для красоты отбражения в списке выполненных
-    void usersEmptyIfNoUserAdded() {
+    void usersEmptyIfNoUserAdded() throws IOException {
+        if (true) {
+            throw new RuntimeException(); // passed
+//            throw new IOException(); //   failed
+        }
         System.out.println("Test1: " + this);
         var users = userService.getAll();
         assertTrue(users.isEmpty(), () -> "User list should by empty");
