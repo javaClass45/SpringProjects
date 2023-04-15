@@ -1,5 +1,7 @@
 package com.mockitobase.petproject.service;
 
+
+
 import com.mockitobase.petproject.model.User;
 import com.mockitobase.petproject.paramresolver.UserServiceParamResolver;
 import com.mockitobase.petproject.repository.UserRepository;
@@ -11,8 +13,10 @@ import org.junit.jupiter.params.provider.*;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.time.Duration;
 import java.util.Map;
 import java.util.Optional;
+import java.util.concurrent.TimeUnit;
 import java.util.stream.Stream;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -133,6 +137,7 @@ public class UserServiceTest {
 
         @Test
 //        @Tag("login")
+//        @Disabled("reason")
         void loginFailIfUserDoesNotExist() {
             userService.add(PEDRO);
             Optional<User> mayBeUser = userService.login("notUser", "notPass");
@@ -142,6 +147,7 @@ public class UserServiceTest {
 
         @Test
 //        @Tag("login")
+//        @RepeatedTest(value = 3, name = RepeatedTest.SHORT_DISPLAY_NAME)
         void loginFailIfPasswordIsNotCorrect() {
             userService.add(PEDRO, TOMAS);
             Map<Integer, User> users = userService.getAllConvertedById();
@@ -182,6 +188,16 @@ public class UserServiceTest {
 
             var maybeUser = userService.login(username, password);
             assertThat(maybeUser).isEqualTo(user);
+        }
+
+
+        @Test
+        @Timeout(value = 200, unit = TimeUnit.MILLISECONDS)
+        void checkLoginFunctionalityPerformance() {
+            var result = assertTimeout(Duration.ofMillis(200L), () -> {
+                Thread.sleep(300L);// error on 103ms
+                return userService.login("Pedro", "123");
+            });
         }
 
     }
