@@ -1,5 +1,6 @@
 package com.mockitobase.petproject.paramresolver;
 
+import com.mockitobase.petproject.dao.UserDao;
 import com.mockitobase.petproject.model.User;
 import com.mockitobase.petproject.repository.UserRepository;
 import com.mockitobase.petproject.service.UserService;
@@ -24,7 +25,7 @@ public class UserServiceParamResolver implements ParameterResolver {
 
     @Override
     public Object resolveParameter(ParameterContext parameterContext, ExtensionContext extensionContext) throws ParameterResolutionException {
-        return new UserService(user);
+        return new UserService(new UserDao());
     }
 
 }

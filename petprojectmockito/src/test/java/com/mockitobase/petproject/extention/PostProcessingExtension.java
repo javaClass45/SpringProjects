@@ -1,5 +1,6 @@
 package com.mockitobase.petproject.extention;
 
+import com.mockitobase.petproject.dao.UserDao;
 import com.mockitobase.petproject.model.User;
 import com.mockitobase.petproject.service.UserService;
 import lombok.Getter;
@@ -19,7 +20,7 @@ public class PostProcessingExtension implements TestInstancePostProcessor {
         var declaredFields = testInstance.getClass().getDeclaredFields();
         for (Field field : declaredFields) {
             if (field.isAnnotationPresent(Getter.class)) {
-                field.set(testInstance, new UserService(user));
+                field.set(testInstance, new UserService(new UserDao()));
             }
         }
 

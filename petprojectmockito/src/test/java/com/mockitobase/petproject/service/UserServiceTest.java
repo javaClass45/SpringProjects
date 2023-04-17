@@ -1,19 +1,18 @@
 package com.mockitobase.petproject.service;
 
 
-
+import com.mockitobase.petproject.dao.UserDao;
 import com.mockitobase.petproject.extention.ConditionalExtension;
 import com.mockitobase.petproject.extention.GlobalExtension;
 import com.mockitobase.petproject.extention.PostProcessingExtension;
-import com.mockitobase.petproject.extention.ThrowableExtension;
 import com.mockitobase.petproject.model.User;
 import com.mockitobase.petproject.paramresolver.UserServiceParamResolver;
 import com.mockitobase.petproject.repository.UserRepository;
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.*;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
@@ -26,7 +25,7 @@ import java.util.stream.Stream;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
-import static org.junit.jupiter.api.Assertions.assertAll;
+import static org.mockito.Mockito.*;
 
 
 @Tag("fast")
@@ -39,19 +38,19 @@ import static org.junit.jupiter.api.Assertions.assertAll;
         GlobalExtension.class,
         PostProcessingExtension.class,
         ConditionalExtension.class,
-        ThrowableExtension.class
+//        ThrowableExtension.class
 })
 public class UserServiceTest {
 
 
-
-    private static final User PEDRO = new User(1,"Pedro", "123");
-    private static final User TOMAS = new User(2,"Tomas", "321");
+    private static final User PEDRO = new User(1, "Pedro", "123");
+    private static final User TOMAS = new User(2, "Tomas", "321");
 
     @Mock
     private User user;
     private UserRepository userRepository;
     private UserService userService;
+    private UserDao userDao;
 
     public UserServiceTest(TestInfo testInfo) {
         System.out.println(testInfo);
@@ -63,16 +62,48 @@ public class UserServiceTest {
     }
 
 
+    //    @BeforeEach
+//    void prepare(UserService userService) {
+//        System.out.println("BeforeEach: " + this);
+////        userService = new UserService(user, userRepository);
+//        this.userService = userService;
+//
+//    }
     @BeforeEach
-    void prepare(UserService userService) {
+    void prepare() {
         System.out.println("BeforeEach: " + this);
-//        userService = new UserService(user, userRepository);
-        this.userService = userService;
+        this.userDao = mock(UserDao.class);
+        this.userService = new UserService(userDao);
 
     }
 
     @Test
-    @DisplayName("users will be empty if no user added") //для красоты отбражения в списке выполненных
+    void shouldDeleteExistedUser() {
+        userService.add(PEDRO);
+        doReturn(true).when(userDao).delete(PEDRO.getId());//Stub
+        var deleteResult = userService.delete(PEDRO.getId());
+        assertThat(deleteResult).isTrue();
+
+    }
+
+    @Test
+    void shouldDeleteExistedUserAlter() {
+        userService.add(PEDRO);
+        when(userDao.delete(PEDRO.getId()))
+                .thenReturn(true)
+                .thenReturn(false);
+        var deleteResult = userService.delete(PEDRO.getId());
+        System.out.println(userService.delete(PEDRO.getId()));
+        System.out.println(userService.delete(PEDRO.getId()));
+
+        assertThat(deleteResult).isTrue();
+
+    }
+
+
+    @Test
+    @DisplayName("users will be empty if no user added")
+        //для красоты отбражения в списке выполненных
     void usersEmptyIfNoUserAdded() throws IOException {
         if (true) {
             throw new RuntimeException(); // passed
@@ -95,7 +126,6 @@ public class UserServiceTest {
 
         assertEquals(2, users.size());
     }
-
 
 
     @Test
@@ -121,8 +151,6 @@ public class UserServiceTest {
     }
 
 
-
-
     @AfterEach
     void deleteDataDB() {
 
@@ -133,7 +161,6 @@ public class UserServiceTest {
     void initAfter() {
         System.out.println("AfterAll: " + this);
     }
-
 
 
     @Nested
@@ -169,7 +196,6 @@ public class UserServiceTest {
                     () -> assertThat(users).containsKeys(PEDRO.getId(), TOMAS.getId()),
                     () -> assertThat(users).containsValues(TOMAS, PEDRO)
             );
-
 
 
         }
@@ -221,7 +247,7 @@ public class UserServiceTest {
                 Arguments.of("Tomas", "321", Optional.of(TOMAS)),
                 Arguments.of("Tomas", "dummy", Optional.empty()),
                 Arguments.of("dummy", "123", Optional.empty())
-                );
+        );
     }
 
 }
