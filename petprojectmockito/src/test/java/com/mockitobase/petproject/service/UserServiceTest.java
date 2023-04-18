@@ -14,6 +14,8 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.mockito.ArgumentCaptor;
+import org.mockito.Captor;
+import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
@@ -39,6 +41,7 @@ import static org.mockito.Mockito.*;
         GlobalExtension.class,
         PostProcessingExtension.class,
         ConditionalExtension.class,
+        MockitoExtension.class
 //        ThrowableExtension.class
 })
 public class UserServiceTest {
@@ -47,11 +50,17 @@ public class UserServiceTest {
     private static final User PEDRO = new User(1, "Pedro", "123");
     private static final User TOMAS = new User(2, "Tomas", "321");
 
-    @Mock
+    @Captor
+    private ArgumentCaptor<Integer> argumentCaptor;
+
+    @Mock(lenient = true)
     private User user;
-    private UserRepository userRepository;
-    private UserService userService;
     private UserDao userDao;
+
+
+    @InjectMocks
+//    private UserRepository userRepository;
+    private UserService userService;
 
     public UserServiceTest(TestInfo testInfo) {
         System.out.println(testInfo);
@@ -81,13 +90,26 @@ public class UserServiceTest {
 //
 //
 
-@BeforeEach //Spy
-void prepare() {
-    System.out.println("BeforeEach: " + this);
-    this.userDao = spy(new UserDao());
-    this.userService = new UserService(userDao);
+    @BeforeEach
+        //Spy
+    void prepare() {
+        System.out.println("BeforeEach: " + this);
 
-}
+        doReturn(true).when(userDao).delete(PEDRO.getId());
+//        mock(UserDao.class, withSettings().lenient());
+        this.userDao = spy(new UserDao());            // after @Mock & @InjectMocks
+//        this.userService = new UserService(userDao);
+
+    }
+
+
+    @Test
+    void throwExceptionIfDatabaseIsNotAvailable() {
+        doThrow(RuntimeException.class).when(userDao).delete(PEDRO.getId());
+        assertThrows(RuntimeException.class, () -> {
+            userService.delete(PEDRO.getId());
+        });
+    }
 
 
 
@@ -113,7 +135,7 @@ void prepare() {
         System.out.println(userService.delete(PEDRO.getId()));
 
         var argumentCaptor = ArgumentCaptor.forClass(Integer.class);
-        verify(userDao,times(3))
+        verify(userDao, times(3))
                 .delete(argumentCaptor.capture());
 
         assertThat(argumentCaptor.getValue()).isEqualTo(1);// 1 - PEDRO's userId
