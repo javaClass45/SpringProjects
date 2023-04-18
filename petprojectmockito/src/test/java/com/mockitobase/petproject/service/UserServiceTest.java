@@ -13,6 +13,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
+import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
@@ -62,20 +63,33 @@ public class UserServiceTest {
     }
 
 
-    //    @BeforeEach
+    //    @BeforeEach // JUnit5
 //    void prepare(UserService userService) {
 //        System.out.println("BeforeEach: " + this);
 ////        userService = new UserService(user, userRepository);
 //        this.userService = userService;
 //
 //    }
-    @BeforeEach
-    void prepare() {
-        System.out.println("BeforeEach: " + this);
-        this.userDao = mock(UserDao.class);
-        this.userService = new UserService(userDao);
 
-    }
+//    @BeforeEach //Mock
+//    void prepare() {
+//        System.out.println("BeforeEach: " + this);
+//        this.userDao = mock(UserDao.class);
+//        this.userService = new UserService(userDao);
+//
+//    }
+//
+//
+
+@BeforeEach //Spy
+void prepare() {
+    System.out.println("BeforeEach: " + this);
+    this.userDao = spy(new UserDao());
+    this.userService = new UserService(userDao);
+
+}
+
+
 
     @Test
     void shouldDeleteExistedUser() {
@@ -89,13 +103,20 @@ public class UserServiceTest {
     @Test
     void shouldDeleteExistedUserAlter() {
         userService.add(PEDRO);
-        when(userDao.delete(PEDRO.getId()))
-                .thenReturn(true)
-                .thenReturn(false);
+        doReturn(true).when(userDao).delete(PEDRO.getId());// for SPY version
+//        doReturn(true).when(userDao).delete(any());
+//        when(userDao.delete(PEDRO.getId())) // при использ-ии SPY тут будет Exception
+//                .thenReturn(true)
+//                .thenReturn(false);
         var deleteResult = userService.delete(PEDRO.getId());
         System.out.println(userService.delete(PEDRO.getId()));
         System.out.println(userService.delete(PEDRO.getId()));
 
+        var argumentCaptor = ArgumentCaptor.forClass(Integer.class);
+        verify(userDao,times(3))
+                .delete(argumentCaptor.capture());
+
+        assertThat(argumentCaptor.getValue()).isEqualTo(1);// 1 - PEDRO's userId
         assertThat(deleteResult).isTrue();
 
     }

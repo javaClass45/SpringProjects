@@ -30,6 +30,7 @@ public class UserService {
     }
 
     public boolean delete(Integer userId) {
+//        Integer userIdLockal = 25;
         return userDao.delete(userId);
     }
 
